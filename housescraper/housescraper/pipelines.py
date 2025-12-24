@@ -41,6 +41,7 @@ class HousescraperPipeline:
             return None
         
         ville = ville.replace("\n", "").replace("\t", "").strip()
+        ville = re.sub(r"\bville\b", "", ville, flags=re.IGNORECASE)
 
         if source == "tayara":
             parts = [p.strip() for p in ville.split(",")]

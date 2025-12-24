@@ -27,9 +27,20 @@ class MubawabspiderSpider(scrapy.Spider):
                 )
 
         # Pagination
-        next_page = response.css("a#nextPage::attr(href)").get()
-        if next_page:
-            yield response.follow(next_page, callback=self.parse)
+        if ':p:' in response.url:
+            current_page = int(response.url.split(':p:')[1])
+        else:
+            current_page = 1
+        
+        next_page = current_page + 1
+        
+        if next_page <= 280:
+            if next_page == 2:
+                next_url = "https://www.mubawab.tn/en/cc/real-estate-for-sale:p:2"
+            else:
+                next_url = response.url.replace(f':p:{current_page}', f':p:{next_page}')
+            
+            yield response.follow(next_url, self.parse)
 
     def parse_detail(self, response):
         house_item = HouseItem()
