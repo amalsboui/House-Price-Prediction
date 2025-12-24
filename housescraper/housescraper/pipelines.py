@@ -104,8 +104,10 @@ class HousescraperPipeline:
         if adapter.get("titre"):
             titre = adapter["titre"]
             titre = self.remove_emojis_and_quotes(titre)
+            titre = self.remove_emojis_and_quotes(titre)
             titre = re.sub(r'[\n\r\t]+', ' ', titre)
             titre = re.sub(r'\s+', ' ', titre)
+            titre = re.sub(r'&[a-z]+;', '', titre)
             adapter["titre"] = titre.strip()
             
         # Clean prix
