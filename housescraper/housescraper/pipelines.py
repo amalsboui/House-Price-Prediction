@@ -31,17 +31,27 @@ class HousescraperPipeline:
         text = emoji_pattern.sub("", text)
 
         # Remove quotes
-        text = text.replace('"', "").replace("'", "")
+        text = text.replace('"', "").replace("'", "").replace("\n", " ").replace("\t", " ").strip()
 
         return text.strip()
 
     @staticmethod
-    def extract_governorate(ville):
+    def extract_governorate(ville, source=None):
         if not ville:
             return None
+        
+        ville = ville.replace("\n", "").replace("\t", "").strip()
 
-        parts = [p.strip() for p in ville.split(",")]
-        return parts[-1] if parts else None
+        if source == "tayara":
+            parts = [p.strip() for p in ville.split(",")]
+            return parts[-1] if parts else ville
+        elif source == "mubawab":
+            if "in" in ville:
+                return ville.split("in", 1)[1].strip()
+            return ville
+        else:
+            return ville
+
 
     
     immobilier_type_map = {
@@ -92,11 +102,15 @@ class HousescraperPipeline:
             
         # Clean titre
         if adapter.get("titre"):
-            adapter["titre"] = self.remove_emojis_and_quotes(adapter["titre"])
-
+            titre = adapter["titre"]
+            titre = self.remove_emojis_and_quotes(titre)
+            titre = re.sub(r'[\n\r\t]+', ' ', titre)
+            titre = re.sub(r'\s+', ' ', titre)
+            adapter["titre"] = titre.strip()
+            
         # Clean prix
         if adapter.get("prix"):
-            prix = adapter["prix"].replace("DT", "").replace(" ", "").replace("TND", "").strip()
+            prix = adapter["prix"].replace("DT", "").replace(" ", "").replace("TND", "").replace("\n", "").replace(",", "").strip()
             try:
                 adapter["prix"] = float(prix)
             except ValueError:
@@ -104,7 +118,7 @@ class HousescraperPipeline:
         
         # Clean surface
         if adapter.get("surface"):
-            surface = adapter["surface"].replace("m", "").strip()
+            surface = adapter["surface"].replace("m", "").replace("\n", "").replace("\t", "").replace("²","").strip()
             try:
                 adapter["surface"] = float(surface)
             except ValueError:
@@ -112,7 +126,7 @@ class HousescraperPipeline:
 
         # Clean ville
         if adapter.get("ville"):
-            adapter["ville"] = self.extract_governorate(adapter["ville"])
+            adapter["ville"] = self.extract_governorate(adapter["ville"], source)
 
         # Clean chambres
         if adapter.get("chambres"):
