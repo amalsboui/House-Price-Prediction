@@ -18,17 +18,7 @@ class HousescraperPipeline:
         if not text:
             return text
 
-        # Remove emojis
-        emoji_pattern = re.compile(
-            "["
-            "\U0001F600-\U0001F64F"
-            "\U0001F300-\U0001F5FF"
-            "\U0001F680-\U0001F6FF"
-            "\U0001F1E0-\U0001F1FF"
-            "]+",
-            flags=re.UNICODE,
-        )
-        text = emoji_pattern.sub("", text)
+        text = re.sub(r'[^\w\s.,!?;:\-\'\"()\[\]{}]', '', text, flags=re.UNICODE)
 
         # Remove quotes
         text = text.replace('"', "").replace("'", "").replace("\n", " ").replace("\t", " ").strip()
@@ -43,15 +33,16 @@ class HousescraperPipeline:
         ville = ville.replace("\n", "").replace("\t", "").strip()
         ville = re.sub(r"\bville\b", "", ville, flags=re.IGNORECASE)
 
-        if source == "tayara":
+        if source == "immobilier":
             parts = [p.strip() for p in ville.split(",")]
-            return parts[-1] if parts else ville
+            return parts[-1].title() if parts else ville.title()
         elif source == "mubawab":
-            if "in" in ville:
-                return ville.split("in", 1)[1].strip()
-            return ville
+            ville = re.sub(r"\bin\s*", " in ", ville, flags=re.IGNORECASE)
+            if " in " in ville.lower():
+                return ville.lower().rsplit(" in ", 1)[1].strip().title()
+            return ville.strip().title()
         else:
-            return ville
+            return ville.title()
 
 
     
