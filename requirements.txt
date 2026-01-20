@@ -16,9 +16,13 @@ seaborn
 
 # --- Machine Learning ---
 scikit-learn
+xgboost
 
 # --- Jupyter / Notebooks ---
 jupyter
 ipykernel
+
+#mlops
+mlflow
 
 
