@@ -251,6 +251,16 @@ Access Swagger docs at `http://localhost:8000/docs`
 
 ---
 
+## Project Pipeline
+
+The following diagram illustrates the full MLOps workflow.
+
+<p align="center">
+  <img src="./pipeline.png" alt="Project Pipeline" width="485"/>
+</p>
+
+---
+
 ## Getting Started
 
 1. Clone the repository
