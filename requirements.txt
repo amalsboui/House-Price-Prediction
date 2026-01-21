@@ -22,7 +22,7 @@ xgboost
 jupyter
 ipykernel
 
-#mlops
+# --- mlops ---
 mlflow
 fastapi
 

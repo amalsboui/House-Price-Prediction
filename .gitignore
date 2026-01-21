@@ -7,3 +7,6 @@ __pycache__/
 *.json
 .env
 .idea/
+mlflow.db
+mlruns
+artifacts
