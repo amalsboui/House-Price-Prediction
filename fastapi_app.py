@@ -4,6 +4,7 @@ import mlflow.pyfunc
 import numpy as np
 import pandas as pd
 import pickle
+from pydantic import Field
 
 
 app = FastAPI(title="House Price Predictor")
@@ -38,15 +39,14 @@ if isinstance(feature_columns, str):
 
 # Human-friendly input
 class HouseFeatures(BaseModel):
-    surface: float
-    rooms: int
+    surface: float = Field(..., gt=10, lt=2000)
+    rooms: int = Field(..., ge=1, le=20)
     governorate: str
     property_type: str
 
 
 @app.post("/predict")
 def predict_house(data: HouseFeatures):
-    try:
         # Convert input to DataFrame
         df_input = pd.DataFrame([data.model_dump()])
 
@@ -60,13 +60,6 @@ def predict_house(data: HouseFeatures):
         # Align with training columns exactly
         df_input = df_input.reindex(columns=feature_columns, fill_value=0)
         
-        '''
-        # Align input to training columns 
-        for col in feature_columns:
-            if col not in df_input.columns:
-                df_input[col] = 0
-        df_input = df_input[feature_columns]  
-        '''
         print(df_input[feature_columns])
 
         # Make prediction
@@ -75,5 +68,7 @@ def predict_house(data: HouseFeatures):
         
         return {"predicted_log_price": float(pred_log_price[0]),
                 "predicted_price": float(pred_price)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/health")
+def health():
+    return {"status": "ok"}
