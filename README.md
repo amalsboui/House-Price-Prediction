@@ -116,10 +116,6 @@ Steps applied to clean and prepare the data:
 - `rooms_per_surface = rooms / surface`
 - `surface_squared = surface ** 2`
 
-**Final dataset saved as:**
-```
-data/clean/clean_housing_tunisia_model_ready.csv
-```
 
 ---
 
@@ -137,6 +133,10 @@ EDA highlights:
   - Property type
 
 EDA notebook: `2_eda.ipynb`.
+**Final dataset saved as:**
+```
+data/clean/clean_housing_tunisia_model_ready.csv
+```
 
 ---
 
