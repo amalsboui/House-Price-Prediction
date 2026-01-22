@@ -19,6 +19,8 @@ The main goal is to provide **reliable price predictions** for properties given 
 9. [Model Registry](#model-registry)
 10. [FastAPI Deployment](#fastapi-deployment)
 11. [Docker Deployment](#docker-deployment)
+12. [Project Pipeline](#project-pipeline)
+13. [Getting Started](#getting-started)
 
 ---
 
